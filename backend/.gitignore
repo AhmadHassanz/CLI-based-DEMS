@@ -1,0 +1,7 @@
+# Ignore compiled java files
+*.class
+out/
+
+# Ignore local data/database files
+backend/data/
+*.csv
