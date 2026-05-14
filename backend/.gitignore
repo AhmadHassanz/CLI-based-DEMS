@@ -2,6 +2,8 @@
 *.class
 out/
 
-# Ignore local data/database files
+# Ignore the entire data folder inside backend
 backend/data/
+
+# Optional: Ignore all CSV files anywhere in the project
 *.csv
