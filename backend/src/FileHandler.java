@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class FileHandler {
     private final String FileName = "users.csv";
-    private final String FolderName = "D:/data";
+    private final String FolderName = "data";
     private final Path path = Paths.get(FolderName, FileName);
 
     public void createFolder() {

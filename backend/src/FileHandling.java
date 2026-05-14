@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 public class FileHandling {
     private final String FileName = "evidence.csv";
-    private final String FolderName = "D:/data";
+    private final String FolderName = "data";
     private final Path path = Paths.get(FolderName, FileName);
 
     public void createFolder() {
