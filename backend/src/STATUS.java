@@ -1,0 +1,3 @@
+public enum STATUS {
+    PENDING,IN_QUEUE,ANALYZED,CLOSED
+}
