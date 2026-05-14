@@ -8,14 +8,16 @@ public class EvidenceNode {
     private STATUS status;
     private String submittedBy;
     private LocalDate dateAdded;
+    private PRIORITY priority;
     private EvidenceNode next;
     private EvidenceNode prev;
 
-    public EvidenceNode(String evidenceId, String caseId, String description, STATUS status, String submittedBy,LocalDate dateAdded) {
+    public EvidenceNode(String evidenceId, String caseId, String description, STATUS status,PRIORITY priority, String submittedBy,LocalDate dateAdded) {
         this.evidenceId = evidenceId;
         this.caseId = caseId;
         this.description = description;
         this.status = status;
+        this.priority = priority;
         this.submittedBy = submittedBy;
         this.dateAdded = dateAdded;
         next = null;
@@ -55,6 +57,10 @@ public class EvidenceNode {
         this.dateAdded = dateAdded;
     }
 
+     public void setPriority(PRIORITY priority) {
+        this.priority = priority;
+    }
+
     // Getters
     public String getCaseId() {
         return caseId;
@@ -86,6 +92,10 @@ public class EvidenceNode {
 
     public LocalDate getDateAdded() {
         return dateAdded;
+    }
+
+     public PRIORITY getPriority() {
+        return priority;
     }
 
     //to String

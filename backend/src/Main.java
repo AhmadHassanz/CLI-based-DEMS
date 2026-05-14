@@ -27,9 +27,12 @@ public class Main {
             }
 
             String selectedRole = "";
-            if (roleChoice == 1) selectedRole = "Admin";
-            else if (roleChoice == 2) selectedRole = "Investigator";
-            else if (roleChoice == 3) selectedRole = "Analyst";
+            if (roleChoice == 1)
+                selectedRole = "Admin";
+            else if (roleChoice == 2)
+                selectedRole = "Investigator";
+            else if (roleChoice == 3)
+                selectedRole = "Analyst";
             else {
                 System.out.println("Invalid structural role chosen.");
                 continue;
@@ -70,7 +73,8 @@ public class Main {
                     System.out.print("Choice: ");
 
                     int ch = readIntInput(sc);
-                    if (ch == 5 || ch == -1) break;
+                    if (ch == 5 || ch == -1)
+                        break;
 
                     if (ch == 1) {
                         System.out.println("\nSelect Role For New User:");
@@ -123,8 +127,8 @@ public class Main {
                         userService.updateUser(oldU, newU, newP);
                     }
                 }
-            } 
-            
+            }
+
             // ==========================================
             // 2. INVESTIGATOR PANEL SUB-LOOP (Full Access)
             // ==========================================
@@ -143,7 +147,8 @@ public class Main {
                     System.out.print("Enter option (0-7): ");
 
                     invInput = readIntInput(sc);
-                    if (invInput == 0) break;
+                    if (invInput == 0)
+                        break;
 
                     switch (invInput) {
                         case 1 -> {
@@ -152,18 +157,31 @@ public class Main {
                             while (true) {
                                 System.out.print("Enter Evidence Number Identifier: ");
                                 evidenceNum = readIntInput(sc);
-                                if (evidenceNum != -1) break;
+                                if (evidenceNum != -1)
+                                    break;
                                 System.out.println("Format error. Enter numerical values only.");
                             }
                             while (true) {
                                 System.out.print("Enter Case Number Assignment: ");
                                 caseNum = readIntInput(sc);
-                                if (caseNum != -1) break;
+                                if (caseNum != -1)
+                                    break;
                                 System.out.println("Format error. Enter numerical values only.");
                             }
                             System.out.print("Description Statement: ");
                             String description = sc.nextLine();
-                            
+
+                            System.out.println("Select priority:");
+                            System.out.println("1. HIGH\n2. LOW\n3. MEDIUM");
+                            int sCh = readIntInput(sc);
+
+                            PRIORITY priority = switch (sCh) {
+                                case 1 -> PRIORITY.HIGH;
+                                case 2 -> PRIORITY.LOW;
+                                case 3 -> PRIORITY.MEDIUM;
+                                default -> PRIORITY.LOW;
+                            };
+
                             LocalDate validatedDate = null;
                             while (true) {
                                 System.out.print("Enter Date Added (YYYY-MM-DD): ");
@@ -176,7 +194,8 @@ public class Main {
                                 }
                             }
                             try {
-                                evidenceList.addEvidence(evidenceNum, caseNum, description, user.username, validatedDate);
+                                evidenceList.addEvidence(evidenceNum, caseNum, description, priority, user.username,
+                                        validatedDate);
                                 System.out.println("Evidence saved into secure storage matrix.");
                             } catch (IllegalArgumentException e) {
                                 System.out.println("Abort: " + e.getMessage());
@@ -204,8 +223,8 @@ public class Main {
                         default -> System.out.println("Action selection invalid.");
                     }
                 }
-            } 
-            
+            }
+
             // ==========================================
             // 3. ANALYST PANEL SUB-LOOP (Read-Only + Status Edit)
             // ==========================================
@@ -221,7 +240,8 @@ public class Main {
                     System.out.print("Enter option (0-4): ");
 
                     analystInput = readIntInput(sc);
-                    if (analystInput == 0) break;
+                    if (analystInput == 0)
+                        break;
 
                     switch (analystInput) {
                         case 1 -> displayNodes(evidenceList.displayForward());
@@ -255,7 +275,7 @@ public class Main {
         }
     }
 
-    // Modular Helper - Dynamic Content Iteration 
+    // Modular Helper - Dynamic Content Iteration
     private static void displayNodes(ArrayList<EvidenceNode> nodes) {
         if (nodes == null || nodes.isEmpty()) {
             System.out.println("Zero matching system traces identified.");
@@ -270,14 +290,15 @@ public class Main {
     private static void runStatusAdjustment(EvidenceList list, Scanner sc) {
         System.out.print("Target Status Alteration Evidence ID: ");
         int updateId = readIntInput(sc);
-        System.out.println("Assign Target Processing Vector:\n1. PENDING\n2. IN_QUEUE\n3. ANALYZED\n4. CLOSED");
+        System.out.println("Assign Target Processing Vector:\n1. PENDING \n2. IN_QUEUE\n3. UNDER_ANALYSIS \n4. ANALYZED\n5. CLOSED");
         System.out.print("Execution Vector Choice: ");
         int choice = readIntInput(sc);
 
         STATUS assignedStatus = switch (choice) {
             case 2 -> STATUS.IN_QUEUE;
-            case 3 -> STATUS.ANALYZED;
-            case 4 -> STATUS.CLOSED;
+            case 3 -> STATUS.UNDER_ANALYSIS;
+            case 4 -> STATUS.ANALYZED;
+            case 5 -> STATUS.CLOSED;
             default -> STATUS.PENDING;
         };
 

@@ -35,6 +35,7 @@ public class FileHandling {
                                 node.getCaseId() + "," +
                                 node.getDescription() + "," +
                                 node.getStatus() + "," +
+                                node.getPriority() + "," +
                                 node.getSubmittedBy() + "," +
                                 node.getDateAdded());
 
@@ -75,10 +76,11 @@ public class FileHandling {
                 String caseId = data[1];
                 String description = data[2];
                 STATUS status = STATUS.valueOf(data[3]);
-                String submittedBy = data[4];
-                LocalDate dataAdded = LocalDate.parse(data[5]);
+                PRIORITY priority = PRIORITY.valueOf(data[4]);
+                String submittedBy = data[5];
+                LocalDate dataAdded = LocalDate.parse(data[6]);
 
-                EvidenceNode newNode = new EvidenceNode(evidenceId, caseId, description, status, submittedBy,
+                EvidenceNode newNode = new EvidenceNode(evidenceId, caseId, description, status, priority,submittedBy,
                         dataAdded);
 
                 if (evidenceList.getHead() == null) {

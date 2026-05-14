@@ -33,7 +33,7 @@ public class EvidenceList {
         return tail;
     }
 
-    public EvidenceNode addEvidence(int id, int num, String description, String submittedBy,
+    public EvidenceNode addEvidence(int id, int num, String description, PRIORITY priority,String submittedBy,
             LocalDate dateAdded) {
 
         if (searchById(id) != null) {
@@ -43,7 +43,7 @@ public class EvidenceList {
         String caseId = String.format("C-%03d", num);
         String evidenceId = String.format("EV-%03d", id);
 
-        EvidenceNode newNode = new EvidenceNode(evidenceId, caseId, description, STATUS.PENDING, submittedBy,
+        EvidenceNode newNode = new EvidenceNode(evidenceId, caseId, description, STATUS.PENDING,priority, submittedBy,
                 dateAdded);
 
         if (head == null) {
