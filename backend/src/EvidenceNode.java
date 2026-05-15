@@ -102,7 +102,7 @@ public class EvidenceNode {
     @Override
     public String toString()
     {
-        return String.format("Evidence Id: %s Case Id: %s Description: %s Status: %s Submitted By: %s  Date: %s",evidenceId,caseId,description,status,submittedBy,dateAdded);
+        return String.format("Evidence Id: %s Case Id: %s Description: %s Status: %s Priority: %s Submitted By: %s  Date: %s",evidenceId,caseId,description,status,priority,submittedBy,dateAdded);
     }
  
 }
