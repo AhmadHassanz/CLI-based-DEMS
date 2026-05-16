@@ -9,3 +9,6 @@ data/
 
 # Ignore CSV files
 *.csv
+
+# Ignore all VS Code folder contents
+.vscode/*
