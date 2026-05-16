@@ -4,11 +4,14 @@ public class CustodyQueue {
     private QueueNode front;
     private QueueNode back;
     int size;
+    private QueueFileHandling file;
     
     public CustodyQueue()
     {
         front = back = null;
         size = 0;
+        file = new QueueFileHandling();
+        file.loadQueue(this);
     }
 
     //Setters
@@ -26,13 +29,13 @@ public class CustodyQueue {
     }
 
      public QueueNode getBack() {
-        return front;
+        return back;
     }
 
     public void enqueue(int eviId,int CId,String submittedBy,PRIORITY priority)
     {
         String evidenceId = String.format("EV-%03d",eviId);
-        String caseId = String.format("C-%03d",eviId);
+        String caseId = String.format("C-%03d",CId);
         QueueNode node = new QueueNode(evidenceId, caseId, submittedBy, priority);
 
         if(back == null)
@@ -44,6 +47,7 @@ public class CustodyQueue {
             back = node;
         }
         size++;
+        file.saveQueue(this);
     }
 
     public QueueNode dequeue()
@@ -62,6 +66,7 @@ public class CustodyQueue {
         }
 
         size--;
+        file.saveQueue(this);
 
         return temp;
     }
@@ -87,6 +92,20 @@ public class CustodyQueue {
             temp = temp.getNext();            
         }
         return list;
+    }
+
+    public void loadNode(String evidenceId,String CaseId,String submittedBy,PRIORITY priority)
+    {
+        QueueNode node = new QueueNode(evidenceId, CaseId, submittedBy, priority);
+        if(back == null)
+        {
+            front = back = node;
+        }else
+        {
+            back.setNext(node);
+            back = node;
+        }
+        size++;
     }
     
 }
