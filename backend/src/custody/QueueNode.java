@@ -1,3 +1,7 @@
+package custody;
+
+import evidence.PRIORITY;
+
 public class QueueNode {
     private String evidenceId;
     private String caseId;

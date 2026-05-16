@@ -1,3 +1,5 @@
+package users;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,7 +40,7 @@ public class FileHandler {
                             parts[0].trim(),
                             parts[1].trim(),
                             parts[2].trim());
-                    service.users.put(user.username, user);
+                    service.users.put(user.getUsername(), user);
                 }
             }
             br.close();
@@ -53,7 +55,7 @@ public class FileHandler {
         try {
             BufferedWriter fw = new BufferedWriter(new FileWriter(path.toFile()));
             for (User u : users.values()) {
-                fw.write(u.username + "," + u.password + "," + u.role + "\n");
+                fw.write(u.getUsername() + "," + u.getPassword() + "," + u.getRole() + "\n");
             }
             fw.close();
         }

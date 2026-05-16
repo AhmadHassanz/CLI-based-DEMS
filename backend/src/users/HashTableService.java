@@ -1,3 +1,5 @@
+package users;
+
 import java.util.HashMap;
 public class HashTableService {
 
@@ -16,7 +18,7 @@ public class HashTableService {
             
             User defaultAdmin = new User("admin", "admin123", "Admin");
             
-            users.put(defaultAdmin.username, defaultAdmin);
+            users.put(defaultAdmin.getUsername(), defaultAdmin);
             file.saveAllUsers(users);
             
             System.out.println("System: Default account created (admin / admin123).");
@@ -24,17 +26,17 @@ public class HashTableService {
     }
 
     public void addUser(User user) {
-        if (users.containsKey(user.username)) {
+        if (users.containsKey(user.getUsername())) {
             return;
         }
-        users.put(user.username, user);
+        users.put(user.getUsername(), user);
         file.saveAllUsers(users);
     }
 
     public User login(String username, String password) {
         if (users.containsKey(username)) {
             User u = users.get(username);
-            if (u.password.equals(password)) {
+            if (u.getPassword().equals(password)) {
                 return u;
             }
         }
@@ -53,7 +55,7 @@ public class HashTableService {
     public void showAllUsers() {
         System.out.println("\n===== USERS =====");
         for (User u : users.values()) {
-            System.out.println(u.username + " | " + u.role);
+            System.out.println(u.getUsername() + " | " + u.getRole());
         }
     }
 
@@ -61,8 +63,8 @@ public class HashTableService {
         if (users.containsKey(oldU)) {
             User u = users.get(oldU);
             users.remove(oldU);
-            u.username = newU;
-            u.password = newP;
+            u.setUsername(newU);
+            u.setPassword(newP);
             users.put(newU, u);
 
             file.saveAllUsers(users);

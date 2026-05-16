@@ -1,5 +1,6 @@
-import java.time.LocalTime;
+package audit;
 
+import java.time.LocalTime;
 public class LogEntry {
     private LocalTime time;
     private String username;

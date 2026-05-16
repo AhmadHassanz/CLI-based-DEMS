@@ -1,5 +1,6 @@
-import java.time.LocalDate;
+package evidence;
 
+import java.time.LocalDate;
 public class EvidenceNode {
 
     private String evidenceId;

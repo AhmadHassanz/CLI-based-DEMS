@@ -1,3 +1,5 @@
+package evidence;
+
 public enum STATUS {
     PENDING,IN_QUEUE,UNDER_ANALYSIS,ANALYZED,CLOSED
 }

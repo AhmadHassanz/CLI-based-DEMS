@@ -1,3 +1,18 @@
+package app;
+
+import audit.AuditStack;
+import audit.LogEntry;
+import cases.CaseBST;
+import cases.CaseNode;
+import cases.CaseStatus;
+import custody.CustodyQueue;
+import custody.QueueNode;
+import evidence.EvidenceList;
+import evidence.EvidenceNode;
+import evidence.PRIORITY;
+import evidence.STATUS;
+import users.HashTableService;
+import users.User;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -67,17 +82,17 @@ public class Main {
                 auditStack.push(username.isEmpty() ? "UNKNOWN" : username, "Failed login attempt as " + selectedRole);
                 continue;
             }
-            if (!user.role.equalsIgnoreCase(selectedRole)) {
+            if (!user.getRole().equalsIgnoreCase(selectedRole)) {
                 System.out.println("  Access denied. Role mismatch.");
-                auditStack.push(user.username, "Failed login (Role mismatch)");
+                auditStack.push(user.getUsername(), "Failed login (Role mismatch)");
                 continue;
             }
 
-            System.out.println("\n  Welcome, " + user.username + "  [" + user.role + "]");
-            auditStack.push(user.username, "Logged into system");
+            System.out.println("\n  Welcome, " + user.getUsername() + "  [" + user.getRole() + "]");
+            auditStack.push(user.getUsername(), "Logged into system");
 
             // ── route to panel ──
-            switch (user.role.toLowerCase()) {
+            switch (user.getRole().toLowerCase()) {
                 case "admin"        -> adminPanel(sc, user);
                 case "investigator" -> investigatorPanel(sc, user);
                 case "analyst"      -> analystPanel(sc, user);
@@ -93,7 +108,7 @@ public class Main {
     // ═══════════════════════════════════════════════
     private static void adminPanel(Scanner sc, User admin) {
         while (true) {
-            printHeader("ADMIN PANEL  —  " + admin.username);
+            printHeader("ADMIN PANEL  —  " + admin.getUsername());
             System.out.println("  ── User Management ──");
             System.out.println("  1. Create User");
             System.out.println("  2. Delete User");
@@ -114,7 +129,7 @@ public class Main {
 
             int ch = readInt(sc);
             if (ch == 0) {
-                auditStack.push(admin.username, "Logged out");
+                auditStack.push(admin.getUsername(), "Logged out");
                 break;
             }
 
@@ -144,13 +159,13 @@ public class Main {
                     } else {
                         userService.addUser(new User(nu, np, nr));
                         System.out.println("  User created.");
-                        auditStack.push(admin.username, "Created new user account: " + nu);
+                        auditStack.push(admin.getUsername(), "Created new user account: " + nu);
                     }
                 }
                 case 2 -> {
                     System.out.print("  Username to delete: ");
                     String du = sc.nextLine().trim();
-                    if (du.equalsIgnoreCase(admin.username)) {
+                    if (du.equalsIgnoreCase(admin.getUsername())) {
                         System.out.println("  Cannot delete yourself.");
                         break;
                     }
@@ -159,7 +174,7 @@ public class Main {
                     } else {
                         userService.deleteUser(du);
                         System.out.println("  User deleted.");
-                        auditStack.push(admin.username, "Deleted user account: " + du);
+                        auditStack.push(admin.getUsername(), "Deleted user account: " + du);
                     }
                 }
                 case 3 -> {
@@ -171,11 +186,11 @@ public class Main {
                     String newP = sc.nextLine().trim();
                     if (newU.isEmpty() || newP.isEmpty()) { System.out.println("  Fields cannot be empty."); break; }
                     userService.updateUser(oldU, newU, newP);
-                    auditStack.push(admin.username, "Updated credentials for user: " + oldU);
+                    auditStack.push(admin.getUsername(), "Updated credentials for user: " + oldU);
                 }
                 case 4 -> {
                     userService.showAllUsers();
-                    auditStack.push(admin.username, "Viewed all system users");
+                    auditStack.push(admin.getUsername(), "Viewed all system users");
                 }
                 case 5 -> {
                     int cid = readPositiveInt(sc, "  Case Number (e.g. 1 -> C-001): ");
@@ -194,7 +209,7 @@ public class Main {
                     try {
                         caseBST.addCase(cid, title, inv, date);
                         System.out.println("  Case added.");
-                        auditStack.push(admin.username, "Added Case C-" + String.format("%03d", cid));
+                        auditStack.push(admin.getUsername(), "Added Case C-" + String.format("%03d", cid));
                     } catch (IllegalArgumentException e) {
                         System.out.println("  Error: " + e.getMessage());
                     }
@@ -206,7 +221,7 @@ public class Main {
                     if (found == null) System.out.println("  Case not found.");
                     else {
                         System.out.println("  " + found);
-                        auditStack.push(admin.username, "Searched for Case C-" + String.format("%03d", sid));
+                        auditStack.push(admin.getUsername(), "Searched for Case C-" + String.format("%03d", sid));
                     }
                 }
                 case 7 -> {
@@ -214,7 +229,7 @@ public class Main {
                     if (cases.isEmpty()) { System.out.println("  No cases on record."); break; }
                     System.out.println();
                     for (CaseNode c : cases) System.out.println("  " + c);
-                    auditStack.push(admin.username, "Viewed sorted list of all cases");
+                    auditStack.push(admin.getUsername(), "Viewed sorted list of all cases");
                 }
                 case 8 -> {
                     int uid = readPositiveInt(sc, "  Case Number to update: ");
@@ -230,7 +245,7 @@ public class Main {
                     if (ns == null) { System.out.println("  Invalid status."); break; }
                     if (caseBST.updateStatus(uid, ns)) {
                         System.out.println("  Status updated.");
-                        auditStack.push(admin.username, "Updated status of Case C-" + String.format("%03d", uid) + " to " + ns);
+                        auditStack.push(admin.getUsername(), "Updated status of Case C-" + String.format("%03d", uid) + " to " + ns);
                     } else {
                         System.out.println("  Case not found.");
                     }
@@ -242,7 +257,7 @@ public class Main {
                     if (check == null) { System.out.println("  Case not found."); break; }
                     caseBST.deleteCase(did);
                     System.out.println("  Case deleted.");
-                    auditStack.push(admin.username, "Deleted Case C-" + String.format("%03d", did));
+                    auditStack.push(admin.getUsername(), "Deleted Case C-" + String.format("%03d", did));
                 }
                 case 10 -> {
                     System.out.println("\n  ── Top 5 Audit Logs ──");
@@ -266,7 +281,7 @@ public class Main {
     // ═══════════════════════════════════════════════
     private static void investigatorPanel(Scanner sc, User inv) {
         while (true) {
-            printHeader("INVESTIGATOR PANEL  —  " + inv.username);
+            printHeader("INVESTIGATOR PANEL  —  " + inv.getUsername());
             System.out.println("  ── Cases (view only) ──");
             System.out.println("  1. View All Cases");
             System.out.println("  2. Search Case by ID");
@@ -286,7 +301,7 @@ public class Main {
 
             int ch = readInt(sc);
             if (ch == 0) {
-                auditStack.push(inv.username, "Logged out");
+                auditStack.push(inv.getUsername(), "Logged out");
                 break;
             }
 
@@ -296,7 +311,7 @@ public class Main {
                     if (cases.isEmpty()) { System.out.println("  No cases on record."); break; }
                     System.out.println();
                     for (CaseNode c : cases) System.out.println("  " + c);
-                    auditStack.push(inv.username, "Viewed all cases");
+                    auditStack.push(inv.getUsername(), "Viewed all cases");
                 }
                 case 2 -> {
                     int sid = readPositiveInt(sc, "  Case Number to search: ");
@@ -305,7 +320,7 @@ public class Main {
                     if (found == null) System.out.println("  Case not found.");
                     else {
                         System.out.println("  " + found);
-                        auditStack.push(inv.username, "Searched for Case C-" + String.format("%03d", sid));
+                        auditStack.push(inv.getUsername(), "Searched for Case C-" + String.format("%03d", sid));
                     }
                 }
                 case 3 -> {
@@ -336,20 +351,20 @@ public class Main {
                     if (date == null) break;
 
                     try {
-                        evidenceList.addEvidence(evNum, caseNum, desc, priority, inv.username, date);
+                        evidenceList.addEvidence(evNum, caseNum, desc, priority, inv.getUsername(), date);
                         System.out.println("  Evidence added.");
-                        auditStack.push(inv.username, "Added Evidence EV-" + String.format("%03d", evNum) + " to Case C-" + String.format("%03d", caseNum));
+                        auditStack.push(inv.getUsername(), "Added Evidence EV-" + String.format("%03d", evNum) + " to Case C-" + String.format("%03d", caseNum));
                     } catch (IllegalArgumentException e) {
                         System.out.println("  Error: " + e.getMessage());
                     }
                 }
                 case 4 -> {
                     printNodes(evidenceList.displayForward());
-                    auditStack.push(inv.username, "Viewed evidence list (forward)");
+                    auditStack.push(inv.getUsername(), "Viewed evidence list (forward)");
                 }
                 case 5 -> {
                     printNodes(evidenceList.displayReverse());
-                    auditStack.push(inv.username, "Viewed evidence list (reverse)");
+                    auditStack.push(inv.getUsername(), "Viewed evidence list (reverse)");
                 }
                 case 6 -> {
                     int eid = readPositiveInt(sc, "  Evidence Number to search: ");
@@ -357,7 +372,7 @@ public class Main {
                     EvidenceNode node = evidenceList.searchById(eid);
                     if(node != null) {
                         System.out.println("  " + node);
-                        auditStack.push(inv.username, "Searched for Evidence EV-" + String.format("%03d", eid));
+                        auditStack.push(inv.getUsername(), "Searched for Evidence EV-" + String.format("%03d", eid));
                     } else {
                         System.out.println("  Evidence not found.");
                     }
@@ -366,15 +381,15 @@ public class Main {
                     int cid = readPositiveInt(sc, "  Case Number to filter by: ");
                     if (cid == -1) break;
                     printNodes(evidenceList.searchByCaseId(cid));
-                    auditStack.push(inv.username, "Filtered evidence by Case C-" + String.format("%03d", cid));
+                    auditStack.push(inv.getUsername(), "Filtered evidence by Case C-" + String.format("%03d", cid));
                 }
-                case 8 -> runStatusChange(sc, inv.username);
+                case 8 -> runStatusChange(sc, inv.getUsername());
                 case 9 -> {
                     int delId = readPositiveInt(sc, "  Evidence Number to delete: ");
                     if (delId == -1) break;
                     if (evidenceList.deleteEvidenceById(delId)) {
                         System.out.println("  Evidence deleted.");
-                        auditStack.push(inv.username, "Deleted Evidence EV-" + String.format("%03d", delId));
+                        auditStack.push(inv.getUsername(), "Deleted Evidence EV-" + String.format("%03d", delId));
                     } else {
                         System.out.println("  Evidence not found.");
                     }
@@ -386,10 +401,10 @@ public class Main {
                     if (node == null) { System.out.println("  Evidence not found."); break; }
                     
                     int caseInt = Integer.parseInt(node.getCaseId().replace("C-", ""));
-                    custodyQueue.enqueue(eid, caseInt, inv.username, node.getPriority());
+                    custodyQueue.enqueue(eid, caseInt, inv.getUsername(), node.getPriority());
                     evidenceList.changeStatus(eid, STATUS.IN_QUEUE);
                     System.out.println("  Evidence queued for analysis.");
-                    auditStack.push(inv.username, "Transferred Evidence EV-" + String.format("%03d", eid) + " to analysis queue");
+                    auditStack.push(inv.getUsername(), "Transferred Evidence EV-" + String.format("%03d", eid) + " to analysis queue");
                 }
                 default -> System.out.println("  Invalid choice.");
             }
@@ -401,7 +416,7 @@ public class Main {
     // ═══════════════════════════════════════════════
     private static void analystPanel(Scanner sc, User analyst) {
         while (true) {
-            printHeader("ANALYST PANEL  —  " + analyst.username);
+            printHeader("ANALYST PANEL  —  " + analyst.getUsername());
             System.out.println("  ── Transfer Queue ──");
             System.out.println("  1. View Transfer Queue");
             System.out.println("  2. Take Next Evidence (dequeue)");
@@ -416,7 +431,7 @@ public class Main {
 
             int ch = readInt(sc);
             if (ch == 0) {
-                auditStack.push(analyst.username, "Logged out");
+                auditStack.push(analyst.getUsername(), "Logged out");
                 break;
             }
 
@@ -431,7 +446,7 @@ public class Main {
                             System.out.println("  " + q);
                         }
                     }
-                    auditStack.push(analyst.username, "Viewed transfer queue");
+                    auditStack.push(analyst.getUsername(), "Viewed transfer queue");
                 }
                 case 2 -> {
                     QueueNode item = custodyQueue.dequeue();
@@ -446,7 +461,7 @@ public class Main {
                             int numId = Integer.parseInt(item.getEvidenceId().replace("EV-", ""));
                             evidenceList.changeStatus(numId, STATUS.UNDER_ANALYSIS);
                             System.out.println("  Status set to UNDER_ANALYSIS.");
-                            auditStack.push(analyst.username, "Dequeued and began processing Evidence " + item.getEvidenceId());
+                            auditStack.push(analyst.getUsername(), "Dequeued and began processing Evidence " + item.getEvidenceId());
                         } catch (NumberFormatException e) {
                             System.out.println("  Failed to update evidence status.");
                         }
@@ -454,7 +469,7 @@ public class Main {
                 }
                 case 3 -> {
                     printNodes(evidenceList.displayForward());
-                    auditStack.push(analyst.username, "Viewed all system evidence");
+                    auditStack.push(analyst.getUsername(), "Viewed all system evidence");
                 }
                 case 4 -> {
                     int eid = readPositiveInt(sc, "  Evidence Number to search: ");
@@ -462,7 +477,7 @@ public class Main {
                     EvidenceNode node = evidenceList.searchById(eid);
                     if(node != null) {
                         System.out.println("  " + node);
-                        auditStack.push(analyst.username, "Searched for Evidence EV-" + String.format("%03d", eid));
+                        auditStack.push(analyst.getUsername(), "Searched for Evidence EV-" + String.format("%03d", eid));
                     } else {
                         System.out.println("  Evidence not found.");
                     }
@@ -471,9 +486,9 @@ public class Main {
                     int cid = readPositiveInt(sc, "  Case Number to filter by: ");
                     if (cid == -1) break;
                     printNodes(evidenceList.searchByCaseId(cid));
-                    auditStack.push(analyst.username, "Filtered evidence by Case C-" + String.format("%03d", cid));
+                    auditStack.push(analyst.getUsername(), "Filtered evidence by Case C-" + String.format("%03d", cid));
                 }
-                case 6 -> runStatusChange(sc, analyst.username);
+                case 6 -> runStatusChange(sc, analyst.getUsername());
                 default -> System.out.println("  Invalid choice.");
             }
         }

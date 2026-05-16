@@ -1,9 +1,11 @@
-# Ignore compiled java files
+# Ignore compiled Java files
 *.class
+
+# Ignore build/output folders
 out/
 
-# Ignore the entire data folder inside backend
-backend/data/
+# Ignore data folder
+data/
 
-# Optional: Ignore all CSV files anywhere in the project
+# Ignore CSV files
 *.csv

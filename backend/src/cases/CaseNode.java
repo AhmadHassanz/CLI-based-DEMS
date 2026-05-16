@@ -1,5 +1,6 @@
-import java.time.LocalDate;
+package cases;
 
+import java.time.LocalDate;
 public class CaseNode {
     private String id;
     private String title;
