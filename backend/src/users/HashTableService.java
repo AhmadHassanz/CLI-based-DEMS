@@ -1,5 +1,6 @@
 package users;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 public class HashTableService {
 
@@ -50,6 +51,10 @@ public class HashTableService {
 
     public User getUser(String username) {
         return users.get(username);
+    }
+
+    public ArrayList<User> getAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
     public void showAllUsers() {

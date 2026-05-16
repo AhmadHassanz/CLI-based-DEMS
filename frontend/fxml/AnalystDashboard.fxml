@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="page" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.AnalystDashboardController">
+    <left>
+        <VBox prefWidth="210" spacing="14" styleClass="sidebar">
+            <Label text="SEQE" styleClass="sidebar-title" />
+            <Label text="Secure Evidence Query Engine" styleClass="sidebar-subtitle" />
+            <Button text="⌂  Dashboard" styleClass="nav-button-active" maxWidth="Infinity" />
+            <Button text="▤  Incoming Queue" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="⌕  Analyze Evidence" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="☷  Analysis Reports" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="↻  Status Updates" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="☰  Audit Trail" styleClass="nav-button" maxWidth="Infinity" />
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="↳ Logout" onAction="#handleLogout" styleClass="logout-button" maxWidth="Infinity" />
+        </VBox>
+    </left>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
+            <Label text="Forensic Analyst Dashboard" styleClass="page-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="userLabel" style="-fx-font-weight: 800;" />
+            <Label text="Forensic Analyst" styleClass="muted" />
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="14" style="-fx-padding: 16;">
+            <HBox spacing="14">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Active Queue Items" /><Label fx:id="queueCountLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Under Analysis" /><Label fx:id="underAnalysisLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Analyzed" /><Label fx:id="analyzedLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Total Reports" /><Label fx:id="reportCountLabel" styleClass="metric-value" /></VBox>
+            </HBox>
+            <HBox spacing="14" VBox.vgrow="ALWAYS">
+                <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="Incoming Evidence Queue (FIFO)" styleClass="section-title" />
+                    <TableView fx:id="queueTable" prefHeight="330">
+                        <columns>
+                            <TableColumn fx:id="evidenceColumn" text="Evidence ID" prefWidth="150" />
+                            <TableColumn fx:id="caseColumn" text="Case ID" prefWidth="150" />
+                            <TableColumn fx:id="submittedByColumn" text="Submitted By" prefWidth="180" />
+                            <TableColumn fx:id="priorityColumn" text="Priority" prefWidth="130" />
+                        </columns>
+                    </TableView>
+                    <Button text="Take Next Evidence" onAction="#handleTakeNext" styleClass="primary-button" />
+                </VBox>
+                <VBox spacing="10" styleClass="card" prefWidth="420">
+                    <Label text="Evidence Status Flow" styleClass="section-title" />
+                    <Label text="Pending  →  In Queue  →  Under Analysis  →  Analyzed  →  Closed" wrapText="true" />
+                    <Label text="Audit Trail (Stack - Latest on Top)" styleClass="section-title" />
+                    <ListView fx:id="auditList" prefHeight="250" />
+                </VBox>
+            </HBox>
+            <HBox spacing="14">
+                <VBox spacing="8" styleClass="card" prefWidth="280">
+                    <Label text="Evidence Information" styleClass="section-title" />
+                    <Label text="Evidence ID" styleClass="muted" /><Label fx:id="selectedEvidenceLabel" text="-" style="-fx-font-weight: 800;" />
+                    <Label text="Case ID" styleClass="muted" /><Label fx:id="selectedCaseLabel" text="-" style="-fx-font-weight: 800;" />
+                    <Label text="Current Status" styleClass="muted" /><Label fx:id="selectedStatusLabel" text="-" style="-fx-font-weight: 800;" />
+                </VBox>
+                <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="Analysis Details" styleClass="section-title" />
+                    <TextArea fx:id="findingsArea" promptText="Enter your findings..." prefRowCount="3" />
+                    <TextArea fx:id="remarksArea" promptText="Enter remarks..." prefRowCount="2" />
+                    <ComboBox fx:id="finalStatusCombo" maxWidth="Infinity" />
+                    <HBox spacing="12">
+                        <Button text="Save Report" onAction="#handleSaveReport" styleClass="primary-button" />
+                        <Button text="Mark Status" onAction="#handleMarkAnalyzed" styleClass="success-button" />
+                    </HBox>
+                </VBox>
+                <VBox spacing="10" styleClass="card" prefWidth="350">
+                    <Label text="Status History" styleClass="section-title" />
+                    <ListView fx:id="statusHistoryList" prefHeight="220" />
+                </VBox>
+            </HBox>
+            <Label fx:id="messageLabel" styleClass="message" />
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="page" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.AdminDashboardController">
+    <left>
+        <VBox prefWidth="210" spacing="14" styleClass="sidebar">
+            <Label text="SEQE" styleClass="sidebar-title" />
+            <Label text="Secure Evidence Query Engine" styleClass="sidebar-subtitle" />
+            <Button text="⌂  Dashboard" styleClass="nav-button-active" maxWidth="Infinity" />
+            <Button text="👤  User Management" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="▣  Case Management" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="☰  Audit Stack" styleClass="nav-button" maxWidth="Infinity" />
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="↳ Logout" onAction="#handleLogout" styleClass="logout-button" maxWidth="Infinity" />
+        </VBox>
+    </left>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
+            <Label text="Admin Dashboard" styleClass="page-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="userLabel" style="-fx-font-weight: 800;" />
+            <Label text="System Admin" styleClass="muted" />
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="14" style="-fx-padding: 16;">
+            <HBox spacing="14">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Total Users" /><Label fx:id="totalUsersLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Total Cases" /><Label fx:id="totalCasesLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Open Cases" /><Label fx:id="openCasesLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Audit Events" /><Label fx:id="auditEventsLabel" styleClass="metric-value" /></VBox>
+            </HBox>
+            <HBox spacing="14" VBox.vgrow="ALWAYS">
+                <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="User Management" styleClass="section-title" />
+                    <TableView fx:id="usersTable" prefHeight="230">
+                        <columns>
+                            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="210" />
+                            <TableColumn fx:id="roleColumn" text="Role" prefWidth="160" />
+                        </columns>
+                    </TableView>
+                    <HBox spacing="8">
+                        <TextField fx:id="newUsernameField" promptText="Username" HBox.hgrow="ALWAYS" />
+                        <PasswordField fx:id="newPasswordField" promptText="Password" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="newRoleCombo" prefWidth="150" />
+                        <Button text="Create" onAction="#handleCreateUser" styleClass="primary-button" />
+                    </HBox>
+                    <HBox spacing="8">
+                        <TextField fx:id="oldUsernameField" promptText="Current username" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="updateUsernameField" promptText="New username" HBox.hgrow="ALWAYS" />
+                        <PasswordField fx:id="updatePasswordField" promptText="New password" HBox.hgrow="ALWAYS" />
+                        <Button text="Update" onAction="#handleUpdateUser" styleClass="ghost-button" />
+                        <Button text="Delete Selected" onAction="#handleDeleteUser" styleClass="danger-button" />
+                    </HBox>
+                </VBox>
+                <VBox spacing="10" styleClass="card" prefWidth="420">
+                    <Label text="Audit Stack" styleClass="section-title" />
+                    <ListView fx:id="auditList" prefHeight="335" />
+                </VBox>
+            </HBox>
+            <HBox spacing="14">
+                <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="Case Management" styleClass="section-title" />
+                    <TableView fx:id="casesTable" prefHeight="230">
+                        <columns>
+                            <TableColumn fx:id="caseIdColumn" text="Case ID" prefWidth="120" />
+                            <TableColumn fx:id="caseTitleColumn" text="Title" prefWidth="240" />
+                            <TableColumn fx:id="investigatorColumn" text="Investigator" prefWidth="170" />
+                            <TableColumn fx:id="caseStatusColumn" text="Status" prefWidth="120" />
+                        </columns>
+                    </TableView>
+                    <HBox spacing="8">
+                        <TextField fx:id="caseNumberField" promptText="Case No. e.g. C-001" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="caseTitleField" promptText="Case title" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="caseInvestigatorField" promptText="Investigator username" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="caseDatePicker" />
+                        <ComboBox fx:id="caseStatusCombo" prefWidth="130" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button text="Add Case" onAction="#handleAddCase" styleClass="primary-button" />
+                        <Button text="Update Status" onAction="#handleUpdateCaseStatus" styleClass="ghost-button" />
+                        <Button text="Delete Case" onAction="#handleDeleteCase" styleClass="danger-button" />
+                    </HBox>
+                </VBox>
+            </HBox>
+            <Label fx:id="messageLabel" styleClass="message" />
+        </VBox>
+    </center>
+</BorderPane>

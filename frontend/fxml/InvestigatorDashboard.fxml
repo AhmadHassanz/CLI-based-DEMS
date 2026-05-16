@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="page" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.InvestigatorDashboardController">
+    <left>
+        <VBox prefWidth="210" spacing="14" styleClass="sidebar">
+            <Label text="SEQE" styleClass="sidebar-title" />
+            <Label text="Secure Evidence Query Engine" styleClass="sidebar-subtitle" />
+            <Button text="⌂  Dashboard" styleClass="nav-button-active" maxWidth="Infinity" />
+            <Button text="+  Add Evidence" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="▣  Evidence Records" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="⌕  Search Evidence" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="⇄  Queue Submission" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="☑  Case Status" styleClass="nav-button" maxWidth="Infinity" />
+            <Button text="☷  Audit Logs" styleClass="nav-button" maxWidth="Infinity" />
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="↳ Logout" onAction="#handleLogout" styleClass="logout-button" maxWidth="Infinity" />
+        </VBox>
+    </left>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
+            <Label text="Investigator Dashboard" styleClass="page-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField promptText="Search evidence, case, ID..." prefWidth="280" styleClass="field" />
+            <Label fx:id="userLabel" style="-fx-font-weight: 800;" />
+            <Label text="Investigator" styleClass="muted" />
+            <Button text="Logout" onAction="#handleLogout" styleClass="danger-button" />
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent;">
+            <VBox spacing="14" style="-fx-padding: 16;">
+                <HBox spacing="14">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Active Cases" /><Label fx:id="activeCasesLabel" styleClass="metric-value" /></VBox>
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Pending Evidence" /><Label fx:id="pendingEvidenceLabel" styleClass="metric-value" /></VBox>
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="In Queue" /><Label fx:id="queueLabel" styleClass="metric-value" /></VBox>
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Closed Cases" /><Label fx:id="closedCasesLabel" styleClass="metric-value" /></VBox>
+                </HBox>
+                <HBox spacing="14" VBox.vgrow="ALWAYS">
+                    <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                        <Label text="Recent Cases" styleClass="section-title" />
+                        <TableView fx:id="casesTable" prefHeight="300">
+                            <columns>
+                                <TableColumn fx:id="caseIdColumn" text="Case ID" prefWidth="110" />
+                                <TableColumn fx:id="titleColumn" text="Case Title" prefWidth="230" />
+                                <TableColumn fx:id="investigatorColumn" text="Investigator" prefWidth="150" />
+                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="110" />
+                                <TableColumn fx:id="dateColumn" text="Date Opened" prefWidth="130" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                    <VBox spacing="10" styleClass="card" prefWidth="380">
+                        <Label text="Add Evidence" styleClass="section-title" />
+                        <TextField fx:id="evidenceIdField" promptText="Evidence ID e.g. EV-001" styleClass="field" />
+                        <TextField fx:id="caseIdField" promptText="Case ID e.g. C-1045" styleClass="field" />
+                        <TextArea fx:id="descriptionField" promptText="Short description" prefRowCount="3" />
+                        <ComboBox fx:id="priorityCombo" maxWidth="Infinity" />
+                        <DatePicker fx:id="evidenceDatePicker" maxWidth="Infinity" />
+                        <Button text="Add Evidence" onAction="#handleAddEvidence" styleClass="primary-button" maxWidth="Infinity" />
+                    </VBox>
+                </HBox>
+                <HBox spacing="14">
+                    <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                        <Label fx:id="selectedCaseLabel" text="Evidence for Selected Case" styleClass="section-title" />
+                        <ListView fx:id="selectedCaseEvidenceList" prefHeight="160" />
+                    </VBox>
+                    <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                        <Label text="Custody Queue (FIFO)" styleClass="section-title" />
+                        <ListView fx:id="queueList" prefHeight="130" />
+                        <Button text="Send Evidence to Queue" onAction="#handleSendToQueue" styleClass="primary-button" />
+                    </VBox>
+                    <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                        <Label text="Audit Trail (Latest)" styleClass="section-title" />
+                        <ListView fx:id="auditList" prefHeight="160" />
+                    </VBox>
+                </HBox>
+                <Label fx:id="messageLabel" styleClass="message" />
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

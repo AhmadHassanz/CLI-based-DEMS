@@ -35,10 +35,10 @@ public class FileHandling {
                 writer.write(
                         node.getEvidenceId() + "," +
                                 node.getCaseId() + "," +
-                                node.getDescription() + "," +
+                                cleanCsvValue(node.getDescription()) + "," +
                                 node.getStatus() + "," +
                                 node.getPriority() + "," +
-                                node.getSubmittedBy() + "," +
+                                cleanCsvValue(node.getSubmittedBy()) + "," +
                                 node.getDateAdded());
 
                 writer.newLine();
@@ -72,7 +72,10 @@ public class FileHandling {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
+                String[] data = parseEvidenceLine(line);
+                if (data == null) {
+                    continue;
+                }
 
                 String evidenceId = data[0];
                 String caseId = data[1];
@@ -105,5 +108,34 @@ public class FileHandling {
         catch (IOException e) {
             System.out.println("No file found" + e.getMessage());
         }
+    }
+
+    private String[] parseEvidenceLine(String line) {
+        String[] parts = line.split(",", -1);
+        if (parts.length < 7) {
+            return null;
+        }
+
+        String[] data = new String[7];
+        data[0] = parts[0].trim();
+        data[1] = parts[1].trim();
+        data[3] = parts[parts.length - 4].trim();
+        data[4] = parts[parts.length - 3].trim();
+        data[5] = parts[parts.length - 2].trim();
+        data[6] = parts[parts.length - 1].trim();
+
+        StringBuilder description = new StringBuilder();
+        for (int i = 2; i <= parts.length - 5; i++) {
+            if (i > 2) {
+                description.append(",");
+            }
+            description.append(parts[i]);
+        }
+        data[2] = description.toString().trim();
+        return data;
+    }
+
+    private String cleanCsvValue(String value) {
+        return value == null ? "" : value.replace(",", " ").trim();
     }
 }
