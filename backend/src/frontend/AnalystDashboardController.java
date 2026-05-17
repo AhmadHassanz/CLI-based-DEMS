@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
@@ -30,8 +29,6 @@ public class AnalystDashboardController {
     @FXML private Label selectedEvidenceLabel;
     @FXML private Label selectedCaseLabel;
     @FXML private Label selectedStatusLabel;
-    @FXML private TextArea findingsArea;
-    @FXML private TextArea remarksArea;
     @FXML private ComboBox<STATUS> finalStatusCombo;
     @FXML private ListView<String> auditList;
     @FXML private ListView<String> statusHistoryList;
@@ -63,11 +60,6 @@ public class AnalystDashboardController {
         showSelected(item);
         messageLabel.setText("Evidence moved under analysis.");
         refresh();
-    }
-
-    @FXML
-    private void handleSaveReport() {
-        messageLabel.setText("Report notes saved in this UI draft.");
     }
 
     @FXML

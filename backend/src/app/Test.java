@@ -19,11 +19,9 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class Test {
 
-    // ─────────────────────────────────────────────
-    //  SHARED STATE (Wired to all custom classes)
-    // ─────────────────────────────────────────────
+   
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private static HashTableService userService  = new HashTableService();
@@ -32,9 +30,7 @@ public class Main {
     private static CustodyQueue     custodyQueue = new CustodyQueue();
     private static AuditStack       auditStack   = new AuditStack(); // Newly added!
 
-    // ─────────────────────────────────────────────
-    //  ENTRY POINT
-    // ─────────────────────────────────────────────
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -49,7 +45,6 @@ public class Main {
             if (choice == 2) break;
             if (choice != 1) { System.out.println("  Invalid choice."); continue; }
 
-            // ── role selection ──
             printHeader("SELECT ROLE");
             System.out.println("  1. Admin");
             System.out.println("  2. Investigator");
@@ -91,7 +86,6 @@ public class Main {
             System.out.println("\n  Welcome, " + user.getUsername() + "  [" + user.getRole() + "]");
             auditStack.push(user.getUsername(), "Logged into system");
 
-            // ── route to panel ──
             switch (user.getRole().toLowerCase()) {
                 case "admin"        -> adminPanel(sc, user);
                 case "investigator" -> investigatorPanel(sc, user);
@@ -103,9 +97,7 @@ public class Main {
         sc.close();
     }
 
-    // ═══════════════════════════════════════════════
-    //  ADMIN PANEL
-    // ═══════════════════════════════════════════════
+  
     private static void adminPanel(Scanner sc, User admin) {
         while (true) {
             printHeader("ADMIN PANEL  —  " + admin.getUsername());
@@ -276,9 +268,7 @@ public class Main {
         }
     }
 
-    // ═══════════════════════════════════════════════
-    //  INVESTIGATOR PANEL
-    // ═══════════════════════════════════════════════
+
     private static void investigatorPanel(Scanner sc, User inv) {
         while (true) {
             printHeader("INVESTIGATOR PANEL  —  " + inv.getUsername());
@@ -411,9 +401,7 @@ public class Main {
         }
     }
 
-    // ═══════════════════════════════════════════════
-    //  ANALYST PANEL
-    // ═══════════════════════════════════════════════
+  
     private static void analystPanel(Scanner sc, User analyst) {
         while (true) {
             printHeader("ANALYST PANEL  —  " + analyst.getUsername());
@@ -494,11 +482,6 @@ public class Main {
         }
     }
 
-    // ═══════════════════════════════════════════════
-    //  SHARED HELPERS (UI ONLY)
-    // ═══════════════════════════════════════════════
-
-    // Passed username to log the status change properly
     private static void runStatusChange(Scanner sc, String currentUsername) {
         int uid = readPositiveInt(sc, "  Evidence Number to update: ");
         if (uid == -1) return;

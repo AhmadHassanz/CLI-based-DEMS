@@ -37,9 +37,15 @@ public class InvestigatorDashboardController {
     @FXML private ComboBox<PRIORITY> priorityCombo;
     @FXML private DatePicker evidenceDatePicker;
     @FXML private Label selectedCaseLabel;
-    @FXML private ListView<String> selectedCaseEvidenceList;
+    @FXML private TableView<EvidenceNode> selectedCaseEvidenceTable;
+    @FXML private TableColumn<EvidenceNode, String> evidenceIdColumn;
+    @FXML private TableColumn<EvidenceNode, String> evidenceCaseIdColumn;
+    @FXML private TableColumn<EvidenceNode, String> evidenceDescriptionColumn;
+    @FXML private TableColumn<EvidenceNode, String> evidenceStatusColumn;
+    @FXML private TableColumn<EvidenceNode, String> evidencePriorityColumn;
+    @FXML private TableColumn<EvidenceNode, String> evidenceSubmittedByColumn;
+    @FXML private TableColumn<EvidenceNode, LocalDate> evidenceDateColumn;
     @FXML private ListView<String> queueList;
-    @FXML private ListView<String> auditList;
     @FXML private Label messageLabel;
 
     @FXML
@@ -53,6 +59,13 @@ public class InvestigatorDashboardController {
         investigatorColumn.setCellValueFactory(new PropertyValueFactory<>("investigator"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateOpened"));
+        evidenceIdColumn.setCellValueFactory(new PropertyValueFactory<>("evidenceId"));
+        evidenceCaseIdColumn.setCellValueFactory(new PropertyValueFactory<>("caseId"));
+        evidenceDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        evidenceStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        evidencePriorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        evidenceSubmittedByColumn.setCellValueFactory(new PropertyValueFactory<>("submittedBy"));
+        evidenceDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
         casesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldCase, selectedCase) -> {
             showEvidenceForCase(selectedCase);
             if (selectedCase != null) {
@@ -81,6 +94,8 @@ public class InvestigatorDashboardController {
             messageLabel.setText("Evidence added.");
             refresh();
             showEvidenceForCase(casesTable.getSelectionModel().getSelectedItem());
+        } catch (IllegalArgumentException e) {
+            messageLabel.setText(e.getMessage());
         } catch (Exception e) {
             messageLabel.setText("Could not add evidence: " + e.getMessage());
         }
@@ -89,13 +104,13 @@ public class InvestigatorDashboardController {
     @FXML
     private void handleSendToQueue() {
         try {
-            String selectedEvidence = selectedCaseEvidenceList.getSelectionModel().getSelectedItem();
-            if (selectedEvidence == null || selectedEvidence.startsWith("No evidence")) {
+            EvidenceNode selectedEvidence = selectedCaseEvidenceTable.getSelectionModel().getSelectedItem();
+            if (selectedEvidence == null) {
                 messageLabel.setText("Select evidence from the selected case first.");
                 return;
             }
 
-            int id = parseNumber(selectedEvidence.split(" ")[0], "EV-");
+            int id = parseNumber(selectedEvidence.getEvidenceId(), "EV-");
             EvidenceNode node = FrontendState.evidenceList.searchById(id);
             if (node == null) {
                 messageLabel.setText("Selected evidence was not found.");
@@ -125,29 +140,20 @@ public class InvestigatorDashboardController {
         closedCasesLabel.setText(String.valueOf(FrontendState.caseBST.SortCases().stream()
                 .filter(c -> "CLOSED".equals(c.getStatus().name())).count()));
         queueList.getItems().setAll(FrontendState.custodyQueue.displayQueue().stream().map(QueueNode::toString).toList());
-        auditList.getItems().setAll(FrontendState.auditStack.recentlog(5).stream().map(Object::toString).toList());
         showEvidenceForCase(casesTable.getSelectionModel().getSelectedItem());
     }
 
     private void showEvidenceForCase(CaseNode selectedCase) {
-        selectedCaseEvidenceList.getItems().clear();
+        selectedCaseEvidenceTable.getItems().clear();
         if (selectedCase == null) {
             selectedCaseLabel.setText("Select a case to view evidence");
-            selectedCaseEvidenceList.getItems().add("No case selected.");
             return;
         }
 
         selectedCaseLabel.setText("Evidence for " + selectedCase.getId());
         int caseNum = parseNumber(selectedCase.getId(), "C-");
         var evidenceForCase = FrontendState.evidenceList.searchByCaseId(caseNum);
-        if (evidenceForCase.isEmpty()) {
-            selectedCaseEvidenceList.getItems().add("No evidence found for this case.");
-            return;
-        }
-
-        selectedCaseEvidenceList.getItems().setAll(evidenceForCase.stream()
-                .map(e -> e.getEvidenceId() + " | " + e.getStatus() + " | " + e.getPriority() + " | " + e.getDescription())
-                .toList());
+        selectedCaseEvidenceTable.setItems(FXCollections.observableArrayList(evidenceForCase));
     }
 
     private String currentUsername() {

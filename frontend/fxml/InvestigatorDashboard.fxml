@@ -26,19 +26,18 @@
             <Button text="⌕  Search Evidence" styleClass="nav-button" maxWidth="Infinity" />
             <Button text="⇄  Queue Submission" styleClass="nav-button" maxWidth="Infinity" />
             <Button text="☑  Case Status" styleClass="nav-button" maxWidth="Infinity" />
-            <Button text="☷  Audit Logs" styleClass="nav-button" maxWidth="Infinity" />
             <Region VBox.vgrow="ALWAYS" />
-            <Button text="↳ Logout" onAction="#handleLogout" styleClass="logout-button" maxWidth="Infinity" />
         </VBox>
     </left>
     <top>
         <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
             <Label text="Investigator Dashboard" styleClass="page-title" />
             <Region HBox.hgrow="ALWAYS" />
-            <TextField promptText="Search evidence, case, ID..." prefWidth="280" styleClass="field" />
-            <Label fx:id="userLabel" style="-fx-font-weight: 800;" />
-            <Label text="Investigator" styleClass="muted" />
-            <Button text="Logout" onAction="#handleLogout" styleClass="danger-button" />
+            <VBox alignment="CENTER_RIGHT" spacing="2">
+                <Label fx:id="userLabel" styleClass="top-user-name" />
+                <Label text="Investigator" styleClass="top-user-role" />
+            </VBox>
+            <Button text="Logout" onAction="#handleLogout" styleClass="top-logout-button" />
         </HBox>
     </top>
     <center>
@@ -76,16 +75,22 @@
                 <HBox spacing="14">
                     <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
                         <Label fx:id="selectedCaseLabel" text="Evidence for Selected Case" styleClass="section-title" />
-                        <ListView fx:id="selectedCaseEvidenceList" prefHeight="160" />
+                        <TableView fx:id="selectedCaseEvidenceTable" prefHeight="175">
+                            <columns>
+                                <TableColumn fx:id="evidenceIdColumn" text="Evidence ID" prefWidth="105" />
+                                <TableColumn fx:id="evidenceCaseIdColumn" text="Case ID" prefWidth="90" />
+                                <TableColumn fx:id="evidenceDescriptionColumn" text="Description" prefWidth="220" />
+                                <TableColumn fx:id="evidenceStatusColumn" text="Status" prefWidth="120" />
+                                <TableColumn fx:id="evidencePriorityColumn" text="Priority" prefWidth="90" />
+                                <TableColumn fx:id="evidenceSubmittedByColumn" text="Submitted By" prefWidth="120" />
+                                <TableColumn fx:id="evidenceDateColumn" text="Date Added" prefWidth="120" />
+                            </columns>
+                        </TableView>
                     </VBox>
                     <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
                         <Label text="Custody Queue (FIFO)" styleClass="section-title" />
                         <ListView fx:id="queueList" prefHeight="130" />
                         <Button text="Send Evidence to Queue" onAction="#handleSendToQueue" styleClass="primary-button" />
-                    </VBox>
-                    <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="Audit Trail (Latest)" styleClass="section-title" />
-                        <ListView fx:id="auditList" prefHeight="160" />
                     </VBox>
                 </HBox>
                 <Label fx:id="messageLabel" styleClass="message" />

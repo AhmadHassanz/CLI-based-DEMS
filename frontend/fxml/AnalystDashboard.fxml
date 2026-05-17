@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -31,8 +30,11 @@
         <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
             <Label text="Forensic Analyst Dashboard" styleClass="page-title" />
             <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="userLabel" style="-fx-font-weight: 800;" />
-            <Label text="Forensic Analyst" styleClass="muted" />
+            <VBox alignment="CENTER_RIGHT" spacing="2">
+                <Label fx:id="userLabel" styleClass="top-user-name" />
+                <Label text="Forensic Analyst" styleClass="top-user-role" />
+            </VBox>
+            <Button text="Logout" onAction="#handleLogout" styleClass="top-logout-button" />
         </HBox>
     </top>
     <center>
@@ -41,7 +43,7 @@
                 <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Active Queue Items" /><Label fx:id="queueCountLabel" styleClass="metric-value" /></VBox>
                 <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Under Analysis" /><Label fx:id="underAnalysisLabel" styleClass="metric-value" /></VBox>
                 <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Analyzed" /><Label fx:id="analyzedLabel" styleClass="metric-value" /></VBox>
-                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Total Reports" /><Label fx:id="reportCountLabel" styleClass="metric-value" /></VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS"><Label text="Audit Events" /><Label fx:id="reportCountLabel" styleClass="metric-value" /></VBox>
             </HBox>
             <HBox spacing="14" VBox.vgrow="ALWAYS">
                 <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
@@ -71,13 +73,11 @@
                     <Label text="Current Status" styleClass="muted" /><Label fx:id="selectedStatusLabel" text="-" style="-fx-font-weight: 800;" />
                 </VBox>
                 <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
-                    <Label text="Analysis Details" styleClass="section-title" />
-                    <TextArea fx:id="findingsArea" promptText="Enter your findings..." prefRowCount="3" />
-                    <TextArea fx:id="remarksArea" promptText="Enter remarks..." prefRowCount="2" />
+                    <Label text="Evidence Status Update" styleClass="section-title" />
+                    <Label text="Select an item from the queue or take the next evidence, then update its status." wrapText="true" styleClass="muted" />
                     <ComboBox fx:id="finalStatusCombo" maxWidth="Infinity" />
                     <HBox spacing="12">
-                        <Button text="Save Report" onAction="#handleSaveReport" styleClass="primary-button" />
-                        <Button text="Mark Status" onAction="#handleMarkAnalyzed" styleClass="success-button" />
+                        <Button text="Update Evidence Status" onAction="#handleMarkAnalyzed" styleClass="success-button" />
                     </HBox>
                 </VBox>
                 <VBox spacing="10" styleClass="card" prefWidth="350">

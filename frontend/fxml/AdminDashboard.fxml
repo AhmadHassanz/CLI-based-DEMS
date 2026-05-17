@@ -31,8 +31,11 @@
         <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
             <Label text="Admin Dashboard" styleClass="page-title" />
             <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="userLabel" style="-fx-font-weight: 800;" />
-            <Label text="System Admin" styleClass="muted" />
+            <VBox alignment="CENTER_RIGHT" spacing="2">
+                <Label fx:id="userLabel" styleClass="top-user-name" />
+                <Label text="System Admin" styleClass="top-user-role" />
+            </VBox>
+            <Button text="Logout" onAction="#handleLogout" styleClass="top-logout-button" />
         </HBox>
     </top>
     <center>
@@ -69,6 +72,7 @@
                 <VBox spacing="10" styleClass="card" prefWidth="420">
                     <Label text="Audit Stack" styleClass="section-title" />
                     <ListView fx:id="auditList" prefHeight="335" />
+                    <Button text="Clear Audit Stack" onAction="#handleClearAuditStack" styleClass="danger-button" maxWidth="Infinity" />
                 </VBox>
             </HBox>
             <HBox spacing="14">

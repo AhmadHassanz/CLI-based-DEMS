@@ -46,6 +46,13 @@ public class AuditStack {
         return top;
     }
 
+    public void clear()
+    {
+        top = null;
+        size = 0;
+        file.saveAudit(this);
+    }
+
     public ArrayList<LogEntry> recentlog(int count)
     {
         ArrayList<LogEntry> list = new ArrayList<>();

@@ -122,10 +122,18 @@ public class AdminDashboardController {
             FrontendState.caseBST.updateStatus(id, caseStatusCombo.getValue());
             FrontendState.auditStack.push(user(), "Added case C-" + String.format("%03d", id));
             messageLabel.setText("Case added.");
+            clearCaseFields();
             refresh();
         } catch (Exception e) {
             messageLabel.setText("Could not add case: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleClearAuditStack() {
+        FrontendState.auditStack.clear();
+        messageLabel.setText("Audit stack cleared.");
+        refresh();
     }
 
     @FXML
@@ -174,6 +182,14 @@ public class AdminDashboardController {
 
     private String user() {
         return FrontendState.getCurrentUser() == null ? "Admin" : FrontendState.getCurrentUser().getUsername();
+    }
+
+    private void clearCaseFields() {
+        caseNumberField.clear();
+        caseTitleField.clear();
+        caseInvestigatorField.clear();
+        caseDatePicker.setValue(LocalDate.now());
+        caseStatusCombo.setValue(CaseStatus.OPENED);
     }
 
     private int parseNumber(String value, String prefix) {
