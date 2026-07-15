@@ -8,16 +8,14 @@ public class AuditStack {
     private int size;
     private AuditFileHandling file;
 
-    public AuditStack()
-    {
+    public AuditStack() {
         top = null;
         size = 0;
         file = new AuditFileHandling();
         file.loadAudit(this);
     }
 
-    public void push(String username,String action)
-    {
+    public void push(String username, String action) {
         LocalTime time = LocalTime.now().withNano(0);
         LogEntry entry = new LogEntry(time, username, action);
         entry.setNext(top);
@@ -26,13 +24,10 @@ public class AuditStack {
         file.saveAudit(this);
     }
 
-    public LogEntry pop()
-    {
-        if(top == null)
-        {
+    public LogEntry pop() {
+        if (top == null) {
             return null;
-        }else
-        {
+        } else {
             LogEntry temp = top;
             top = top.getNext();
             size--;
@@ -41,20 +36,17 @@ public class AuditStack {
         }
     }
 
-    public LogEntry peek()
-    {
+    public LogEntry peek() {
         return top;
     }
 
-    public void clear()
-    {
+    public void clear() {
         top = null;
         size = 0;
         file.saveAudit(this);
     }
 
-    public ArrayList<LogEntry> recentlog(int count)
-    {
+    public ArrayList<LogEntry> recentlog(int count) {
         ArrayList<LogEntry> list = new ArrayList<>();
         LogEntry temp = top;
         int i = 0;
@@ -67,8 +59,7 @@ public class AuditStack {
         return list;
     }
 
-    public ArrayList<LogEntry> viewLog()
-    {
+    public ArrayList<LogEntry> viewLog() {
         ArrayList<LogEntry> list = new ArrayList<>();
         LogEntry temp = top;
         while (temp != null) {
@@ -78,18 +69,15 @@ public class AuditStack {
         return list;
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return size;
     }
 
-       public void loadEntry(String username,String action,LocalTime time)
-    {
+    public void loadEntry(String username, String action, LocalTime time) {
         LogEntry entry = new LogEntry(time, username, action);
         entry.setNext(top);
         top = entry;
         size++;
     }
-
 
 }

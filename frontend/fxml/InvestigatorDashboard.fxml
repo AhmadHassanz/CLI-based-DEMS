@@ -86,6 +86,7 @@
                                 <TableColumn fx:id="evidenceDateColumn" text="Date Added" prefWidth="120" />
                             </columns>
                         </TableView>
+                        <Button text="Delete Selected Evidence" onAction="#handleDeleteEvidence" styleClass="danger-button" />
                     </VBox>
                     <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
                         <Label text="Custody Queue (FIFO)" styleClass="section-title" />

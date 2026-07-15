@@ -128,6 +128,25 @@ public class InvestigatorDashboardController {
     }
 
     @FXML
+    private void handleDeleteEvidence() {
+        EvidenceNode selectedEvidence = selectedCaseEvidenceTable.getSelectionModel().getSelectedItem();
+        if (selectedEvidence == null) {
+            messageLabel.setText("Select evidence to delete first.");
+            return;
+        }
+
+        int id = parseNumber(selectedEvidence.getEvidenceId(), "EV-");
+        if (FrontendState.evidenceList.deleteEvidenceById(id)) {
+            FrontendState.auditStack.push(currentUsername(), "Deleted evidence " + selectedEvidence.getEvidenceId());
+            messageLabel.setText("Evidence deleted.");
+            refresh();
+            showEvidenceForCase(casesTable.getSelectionModel().getSelectedItem());
+        } else {
+            messageLabel.setText("Evidence not found.");
+        }
+    }
+
+    @FXML
     private void handleLogout() throws IOException {
         FrontendApp.showLogin();
     }
