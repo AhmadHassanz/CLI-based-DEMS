@@ -1,6 +1,6 @@
-# Digital Evidence Management System (DEMS)
+# Secure Evidence Query Engine (SEQE)
 
-A Java-based Digital Evidence Management System built as a semester project for a **Data Structures** course. DEMS simulates how a forensics/investigation unit tracks cases, evidence, chain-of-custody transfers, users, and audit logs — with every core feature backed by a hand-written data structure instead of built-in Java collections.
+A Java-based Digital Evidence Management System (DEMS) built as a semester project for a **Data Structures** course. SEQE simulates how a forensics/investigation unit tracks cases, evidence, chain-of-custody transfers, users, and audit logs — with every core feature backed by a hand-written data structure instead of built-in Java collections.
 
 The project has both a **console (CLI) interface** (`app.Test`) and a **JavaFX GUI** (`frontend.FrontendApp`) sharing the same backend logic.
 
